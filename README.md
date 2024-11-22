@@ -47,7 +47,7 @@ pip install -r requirements.txt
 ```
 
 ## Data Preparation
-1. Download the Things-EEG dataset from the [OSF repository](xxxxxxxx) and put them in the `data` dir.
+1. Download the Things-EEG dataset from the OSF repository and put them in the `data` dir.
 
 2. Resize the downloaded images using the provided script:
 
@@ -76,7 +76,15 @@ To run the experiments using the provided configurations, execute:
 /bin/bash scripts/exp.sh
 ```
 
+```
+brain_backbone="EEGProjectLayer"
+vision_backbone="RN50"
+i="01"
+seed=0
+python main.py --config configs/ubp.yaml --subjects sub-$i --seed $seed --exp_setting intra-subject --brain_backbone $brain_backbone --vision_backbone $vision_backbone --epoch 50 --lr 1e-4;
+
+```
 ## Acknowledgement
-The code is inspired by prior works on EEG retrieve tasks.
+The code is inspired by prior awesome works on EEG retrieve tasks.
 
 For anonymity, we have omitted the external links.
