@@ -85,6 +85,16 @@ python main.py --config configs/ubp.yaml --subjects sub-$i --seed $seed --exp_se
 
 ```
 ## Acknowledgement
-The code is inspired by prior awesome works on EEG retrieve tasks.
+The code is inspired by prior awesome works on neural decoding tasks:
+- [Decoding Natural Images from EEG for Object Recognition](https://github.com/eeyhsong/NICE-EEG) [ICLR 2024]
+- [Visual Decoding and Reconstruction via EEG Embeddings with Guided Diffusion](https://github.com/dongyangli-del/EEG_Image_decode) [NeurIPS 2024]
+- [Decoding Visual Neural Representations by Multimodal Learning of Brain-Visual-Linguistic Features](https://github.com/ChangdeDu/BraVL)  [TPAMI 2023]
 
-For anonymity, we have omitted the external links.
+Uncertainy-aware work realted to multimodality:
+- [Trusted multi-view classification with dynamic evidential fusion](https://github.com/hanmenghan/TMC) [TPAMI 2022]
+- [Provable Dynamic Fusion for Low-Quality Multimodal Data](https://github.com/QingyangZhang/QMF) (ICML 2023)
+
+<!-- ## Citation
+```
+
+``` -->
