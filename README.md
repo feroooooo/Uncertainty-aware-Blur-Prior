@@ -110,7 +110,7 @@ If you find our work helpful, please cite:
     title = {Bridging the Vision-Brain Gap with an Uncertainty-Aware Blur Prior},
     author = {Wu, Haitao and Li, Qing and Zhang, Changqing and He, Zhen and Ying, Xiaomin},
     booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
-    year = {2025},
+    year = {2025}
 }
 ```
 
