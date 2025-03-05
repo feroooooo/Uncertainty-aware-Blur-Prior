@@ -2,11 +2,12 @@
 
 ## Table of Contents
 - [Introduction](#introduction)
+- [Repo Architecture](#repo-architecture)
 - [Environment Setup](#environment-setup)
 - [Data Preparation](#data-preparation)
 - [Run](#run)
 
-# Introduction
+## Introduction
 This is the official implementation for [Bridging the Vision-Brain Gap with an Uncertainty-Aware Blur Prior](assets/jtjdtqdrvsmbyxxgcpkvfypmkqpmpdtt.pdf) (CVPR 2025) with various brain and CLIP encoders.
 
 <p align="center">
@@ -14,6 +15,7 @@ This is the official implementation for [Bridging the Vision-Brain Gap with an U
 </p>
 
 
+## Repo Architecture
 ```
 UBP/                           # Root directory
 ├── README.md
