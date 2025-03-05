@@ -1,17 +1,17 @@
 # Uncertainty-aware Blur Prior (UBP)
 
+## Table of Contents
+- [Introduction](#introduction)
+- [Environment Setup](#environment-setup)
+- [Data Preparation](#data-preparation)
+- [Run](#run)
+
 # Introduction
 This is the official implementation for [Bridging the Vision-Brain Gap with an Uncertainty-Aware Blur Prior](assets/jtjdtqdrvsmbyxxgcpkvfypmkqpmpdtt.pdf) (CVPR 2025) with various brain and CLIP encoders.
 
 <p align="center">
 <img src="./assets/motivation.png" >
 </p>
-
-## Table of Contents
-- [Introduction](#introduction)
-- [Environment Setup](#environment-setup)
-- [Data Preparation](#data-preparation)
-- [Run](#run)
 
 
 ```
