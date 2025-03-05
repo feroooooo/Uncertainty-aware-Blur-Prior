@@ -1,9 +1,8 @@
 # Uncertainty-aware Blur Prior (UBP)
 This is the official implementation for [Bridging the Vision-Brain Gap with an Uncertainty-Aware Blur Prior]() (CVPR 2025).
 
-<p align="center">
-<img src="./assets/motivation.pdf" width="850" height="320">
-</p>
+<embed src="./assets/motivation.pdf" width="850px" height="320px" />
+
 
 ## Table of Contents
 - [Introduction](#introduction)
