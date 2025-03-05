@@ -103,6 +103,17 @@ Uncertainy-aware work related to multimodality:
 - [Provable Dynamic Fusion for Low-Quality Multimodal Data](https://github.com/QingyangZhang/QMF) (ICML 2023)
 - [Reliable Conflictive Multi-View Learning](https://github.com/jiajunsi/RCML) (AAAI 2024, Outstanding Paper)
 
+## Citation
+If you find our work helpful, please cite:
+```bibtex
+@InProceedings{Wu2025UBP,
+    title={Bridging the Vision-Brain Gap with an Uncertainty-Aware Blur Prior},
+    author={Wu, Haitao and Li, Qing and Zhang, Changqing and He, Zhen and Ying, Xiaomin},
+    booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+    year      = {2025},
+}
+```
+
 
 ## Contact us
 For any additional questions, feel free to email wuhaitao@tju.edu.cn .
