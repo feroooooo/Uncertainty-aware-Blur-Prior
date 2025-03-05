@@ -1,4 +1,5 @@
 # Uncertainty-aware Blur Prior (UBP)
+This is the official implementation for [Bridging the Vision-Brain Gap with an Uncertainty-Aware Blur Prior]() (CVPR 2025).
 
 ## Table of Contents
 - [Introduction](#introduction)
@@ -93,6 +94,12 @@ The code is inspired by prior awesome works on neural decoding tasks:
 Uncertainy-aware work realted to multimodality:
 - [Trusted multi-view classification with dynamic evidential fusion](https://github.com/hanmenghan/TMC) [TPAMI 2022]
 - [Provable Dynamic Fusion for Low-Quality Multimodal Data](https://github.com/QingyangZhang/QMF) (ICML 2023)
+- [Reliable Conflictive Multi-View Learning](https://github.com/jiajunsi/RCML) (AAAI 2024, Outstanding Paper)
+
+
+## Cntact us
+For any additional questions, feel free to email wuhaitao@tju.edu.cn .
+
 
 <!-- ## Citation
 ```
