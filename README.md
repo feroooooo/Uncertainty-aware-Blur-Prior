@@ -101,7 +101,7 @@ Uncertainy-aware work realted to multimodality:
 - [Reliable Conflictive Multi-View Learning](https://github.com/jiajunsi/RCML) (AAAI 2024, Outstanding Paper)
 
 
-## Cntact us
+## Contact us
 For any additional questions, feel free to email wuhaitao@tju.edu.cn .
 
 
