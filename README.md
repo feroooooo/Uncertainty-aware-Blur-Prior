@@ -94,6 +94,11 @@ python main.py --config configs/ubp.yaml --subjects sub-$i --seed $seed --exp_se
 
 ```
 ## Acknowledgement
+We acknowledge the contributions of the following datasets:
+- [A large and rich EEG dataset for modeling human visual object recognition](https://www.sciencedirect.com/science/article/pii/S1053811922008758) [THINGS-EEG]
+- [
+THINGS-data, a multimodal collection of large-scale datasets for investigating object representations in human brain and behavior](https://pubmed.ncbi.nlm.nih.gov/36847339/) [THINGS-MEG]
+
 The code is inspired by prior awesome works on neural decoding tasks:
 - [Decoding Natural Images from EEG for Object Recognition](https://github.com/eeyhsong/NICE-EEG) [ICLR 2024]
 - [Visual Decoding and Reconstruction via EEG Embeddings with Guided Diffusion](https://github.com/dongyangli-del/EEG_Image_decode) [NeurIPS 2024]
