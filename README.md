@@ -56,7 +56,7 @@ pip install -r requirements.txt
 ```
 
 ## Data Preparation
-1. Download the Things-EEG dataset from the OSF repository and put them in the `data` dir.
+1. Download the Things-EEG dataset from the [OSF repository](https://osf.io/anp5v/files/osfstorage) and put them in the `data` dir.
 
 2. Resize the downloaded images using the provided script:
 
