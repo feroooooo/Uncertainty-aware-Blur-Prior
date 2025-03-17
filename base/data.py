@@ -83,7 +83,8 @@ class EEGDataset(Dataset):
 
         data_dir = os.path.join(self.data_dir,'../Image_feature',f"{config['data']['blur_type']['target'].rsplit('.',1)[-1]}")
         os.makedirs(data_dir,exist_ok=True)
-        features_filename = os.path.join(data_dir,f"{self.model_type.replace('/','-')}_{self.name}_{mode}.pt")
+
+        features_filename = os.path.join(data_dir,f"{self.name}_{mode}.pt")
 
         pretrain_map= {
                 'RN50':{'pretrained':'openai','resize':(224,224)}, #1024 

@@ -49,6 +49,9 @@ class PLModel(pl.LightningModule):
         self.alpha = 0.05
         self.gamma = 0.3
         
+        self.mAP_total = 0
+        self.match_similarities = []
+        
 
     def forward(self, batch,sample_posterior=False):
  
@@ -166,6 +169,19 @@ class PLModel(pl.LightningModule):
         self.all_predicted_classes.append(top_k_indices.cpu().numpy())
         label =  batch['label']
         self.all_true_labels.extend(label.cpu().numpy())
+
+        #compute sim and map
+        self.match_similarities.extend(similarity.diag().detach().cpu().tolist())
+
+
+        for i in range(similarity.shape[0]):
+            true_index = i
+            sims = similarity[i, :]
+            sorted_indices = torch.argsort(-sims)
+            rank = (sorted_indices == true_index).nonzero()[0][0] + 1
+            ap = 1 / rank
+            self.mAP_total += ap
+        
         return loss
         
     def on_test_epoch_end(self):
@@ -177,13 +193,22 @@ class PLModel(pl.LightningModule):
         top_1_accuracy = sum(top_1_correct)/len(top_1_correct)
         top_k_correct = (all_predicted_classes == all_true_labels[:, np.newaxis]).any(axis=1)
         top_k_accuracy = sum(top_k_correct)/len(top_k_correct)
+
+        self.mAP = (self.mAP_total / len(all_true_labels)).item()
+        self.match_similarities = np.mean(self.match_similarities) if self.match_similarities else 0
+
+        
+
         self.log('test_top1_acc', top_1_accuracy, sync_dist=True)
         self.log('test_top5_acc', top_k_accuracy, sync_dist=True)
+        self.log('mAP', self.mAP, sync_dist=True)
+        self.log('similarity', self.match_similarities, sync_dist=True)
+
         self.all_predicted_classes = []
         self.all_true_labels = []
 
         avg_test_loss = self.trainer.callback_metrics['test_loss']
-        return  {'test_loss': avg_test_loss.item(), 'test_top1_acc': top_1_accuracy.item(),'test_top5_acc':top_k_accuracy.item()}
+        return  {'test_loss': avg_test_loss.item(), 'test_top1_acc': top_1_accuracy.item(),'test_top5_acc':top_k_accuracy.item(),'mAP':self.mAP,'similarity':self.match_similarities}
         
     def configure_optimizers(self):
         optimizer = globals()[self.config['train']['optimizer']](self.parameters(), lr = self.config['train']['lr'], weight_decay=1e-4)
@@ -299,8 +324,8 @@ def main():
     trainer = Trainer(log_every_n_steps=10, strategy=DDPStrategy(find_unused_parameters=False),callbacks=[early_stop_callback, checkpoint_callback],max_epochs=config['train']['epoch'], devices=[device],accelerator='cuda',logger=logger)
     print(trainer.logger.log_dir)
 
-    ckpt_path = None
-    trainer.fit(pl_model, train_dataloaders=train_loader, val_dataloaders=val_loader)
+    ckpt_path = 'last' #None
+    trainer.fit(pl_model, train_dataloaders=train_loader, val_dataloaders=val_loader,ckpt_path=ckpt_path)
 
     if config['exp_setting'] == 'inter-subject':
         test_results = trainer.test(ckpt_path='best', dataloaders=test_loader)
