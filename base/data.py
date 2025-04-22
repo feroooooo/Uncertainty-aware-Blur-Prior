@@ -14,6 +14,9 @@ from base.utils import instantiate_from_config, get_device
 
 
 def load_data(config):
+    # 调整log级别（后续添加）
+    logging.basicConfig(level=logging.INFO)
+    
     exp_setting = config.get('exp_setting', 'intra-subject')
     
     if exp_setting == 'intra-subject':
@@ -82,6 +85,7 @@ class EEGDataset(Dataset):
         self.trial_all_subjects = self.trial_subject*len(self.subjects)
 
         data_dir = os.path.join(self.data_dir,'../Image_feature',f"{config['data']['blur_type']['target'].rsplit('.',1)[-1]}")
+        # 创建 data/things-eeg/Image_feature/[DirectT, FoveaBlur] 目录
         os.makedirs(data_dir,exist_ok=True)
 
         features_filename = os.path.join(data_dir,f"{self.name}_{mode}.pt")
@@ -106,6 +110,7 @@ class EEGDataset(Dataset):
                 self.blur_transform[tag] = instantiate_from_config(blur_param)
         else:
             self.blur_transform = instantiate_from_config(config['data']['blur_type'])
+        # 正则化的均值和标准差是怎么得到的？（是计算所有图像得到的吗？）
         process_term = [transforms.ToTensor(), transforms.Normalize(mean=(0.48145466, 0.4578275, 0.40821073), std=(0.26862954, 0.26130258, 0.27577711))] #transforms.Resize(pretrain_map[self.model_type]['resize']), 
         self.process_transform = transforms.Compose(process_term)
 
@@ -125,6 +130,7 @@ class EEGDataset(Dataset):
                 self.img_features = {}
                 for tag in ['low','medium','high']:
                     self.img_features[tag] = self.ImageEncoder(self.loaded_data[0]['img'],self.blur_transform[tag])
+                # 为什么要平均三种模糊强度，只是增加一个key
                 self.img_features['avg'] = {k: (sum(self.img_features[tag][k] for tag in ['low', 'medium', 'high']) / 3) for k in self.img_features['medium']}
             else:
                 self.img_features = self.ImageEncoder(self.loaded_data[0]['img'])
@@ -139,6 +145,7 @@ class EEGDataset(Dataset):
             gc.collect()
 
     def load_data(self,data_path):
+        # 没搞懂这个data_path.rsplit('1000HZ',1)[-1]，用1000HZ这个字符串来分割有什么用？
         logging.info(f"----load {data_path.rsplit('1000HZ',1)[-1]}----")
         loaded_data = torch.load(data_path)
         loaded_data['eeg']=torch.from_numpy(loaded_data['eeg'])
@@ -152,7 +159,8 @@ class EEGDataset(Dataset):
             avg_data['label'] = loaded_data['label'][:,0]
             avg_data['img'] = loaded_data['img'][:,0]
             avg_data['text'] = loaded_data['text'][:,0]
-                
+            
+            # 为什么session不平均？还是 stimuli x trails
             avg_data['session'] = loaded_data['session']
             avg_data['times'] = loaded_data['times']
             loaded_data = avg_data
@@ -224,7 +232,8 @@ class EEGDataset(Dataset):
         img_path = self.loaded_data[subject]['img'][trial_index]
 
         img = 'None' #Image.open(os.path.join(self.data_dir,'../Image_set_Resize',img_path)).convert("RGB")
-    
+
+        # match_label有更新吗，在哪里更新的？
         match_label = self.match_label[index]
         
         if self.config['data']['uncertainty_aware']:

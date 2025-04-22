@@ -48,8 +48,12 @@ def update_config(args, config):
         config[key]=getattr(args, key)
     return config
 
-
+# 只返回一个gpu id
 def get_device(gpu_ids):
+    # 将GPU按空闲内存从高到低排序
+    # 选取空闲内存排名前40%的GPU
+    # 在这些GPU中再按温度从低到高排序
+    # 选择温度最低的GPU作为最终设备
     if gpu_ids=='auto':
         nvidia_smi_output = subprocess.check_output(['nvidia-smi', '--query-gpu=index,memory.free,temperature.gpu', '--format=csv,noheader,nounits'])
         gpu_info_lines = nvidia_smi_output.decode('utf-8').strip().split('\n')
@@ -66,8 +70,10 @@ def get_device(gpu_ids):
         selected_device = selected_gpus[0][0]
         # device = torch.device(f'cuda:{selected_device}')
     elif gpu_ids=="cpu":
+        # 代码有问题，没用
         device = torch.device('cpu')
     else:
+        # 选择列表中的第一个GPU作为设备
         gpu_ids = list(map(int,gpu_ids.split(",")))
         selected_device=gpu_ids[0]
         # device = torch.device(f'cuda:{selected_device}')

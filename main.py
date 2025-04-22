@@ -19,7 +19,7 @@ from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 from base.data import load_data
 from base.utils import update_config , ClipLoss, instantiate_from_config, get_device
 
-device = get_device('auto')
+device:int = get_device('auto')
 
 def load_model(config,train_loader,test_loader):
     model = {}
@@ -35,6 +35,7 @@ class PLModel(pl.LightningModule):
         super().__init__()
 
         self.config = config
+        # 设置 self.brain 为 base.eeg_backbone.${brain_backbone}
         for key, value in model.items():
             setattr(self, f"{key}", value)
         self.criterion = ClipLoss()
@@ -68,6 +69,7 @@ class PLModel(pl.LightningModule):
         logit_scale = self.brain.softplus(logit_scale)
         
         eeg_loss, img_loss, logits_per_image = self.criterion(eeg_z, img_z, logit_scale)
+        # 为什么要先reduction='none'然后在这里mean，直接默认reduction='mean'应该是等价的吧
         total_loss = (eeg_loss.mean() + img_loss.mean()) / 2
 
         if self.config['data']['uncertainty_aware']:
@@ -275,6 +277,7 @@ def main():
     opt = parser.parse_args()
     seed_everything(opt.seed)
     config = OmegaConf.load(f"{opt.config}")
+    # 用args参数更新config参数（覆盖相同，增加不同）
     config = update_config(opt, config)
     config['data']['subjects'] = [opt.subjects]
 
@@ -290,21 +293,27 @@ def main():
     }
 
     config['z_dim'] = pretrain_map[opt.vision_backbone]['z_dim']
-    print(config)
+    from pprint import pprint
+    pprint(dict(config))
 
     os.makedirs(config['save_dir'],exist_ok=True)
     logger = TensorBoardLogger(config['save_dir'], name=config['name'], version=f"{'_'.join(config['data']['subjects'])}_seed{config['seed']}")
+    # TensorBoardLogger会自动创建，没必要手动
     os.makedirs(logger.log_dir,exist_ok=True)
+    # 将config文件复制到log_dir
     shutil.copy(opt.config, os.path.join(logger.log_dir,opt.config.rsplit('/',1)[-1]))
 
+    # intra时val_loader和test_loader用了一个，但选checkpoint不取决于val loader，因此没影响
     train_loader, val_loader, test_loader = load_data(config)
 
     print(f"train num: {len(train_loader.dataset)},val num: {len(val_loader.dataset)}, test num: {len(test_loader.dataset)}")
     pl_model = load_model(config, train_loader, test_loader)
 
+    # 只保存最后一个epoch的checkpoint
     checkpoint_callback = ModelCheckpoint(save_last=True)
 
     if config['exp_setting'] == 'inter-subject':
+        # 5 轮 val top1 acc 上升不超过0.001就停
         early_stop_callback = EarlyStopping(
             monitor='val_top1_acc',
             min_delta=0.001,     
@@ -313,6 +322,7 @@ def main():
             mode='max' 
         )
     else:
+        # 5 轮 train loss 下降不超过0.001就停
         early_stop_callback = EarlyStopping(
             monitor='train_loss',
             min_delta=0.001,
