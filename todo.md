@@ -1,0 +1,4 @@
+linear projector（效果提升，在feature dimension为512时最优）
+检查EEGProjectLayer的softplus（已查，在train中使用，为了将学习到的temperature映射为正数）
+尝试让temperature不可学习
+尝试在projector后加归一化（归一化后准确率降低，为什么）

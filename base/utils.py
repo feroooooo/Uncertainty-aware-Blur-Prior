@@ -80,8 +80,10 @@ def get_device(gpu_ids):
     return selected_device
 
 class ClipLoss(nn.Module):
-    def __init__(self):
+    def __init__(self, model_type = 'RN50', temperature=None):
         super().__init__()
+        self.logit_scale = nn.Parameter(torch.ones([]) * np.log(1 / temperature["init_temp"]), requires_grad=temperature["learnable"])
+        self.softplus = nn.Softplus()
        
     def compute_ranking_weights(self,loss_list):
         sorted_indices = torch.argsort(loss_list)

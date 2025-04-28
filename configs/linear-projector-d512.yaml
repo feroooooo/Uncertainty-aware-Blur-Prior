@@ -1,9 +1,10 @@
 timesteps: [0,250]
 
-blur_kernel_size: 51
+blur_kernel_size: 15
 system_g: 3
+feature_dim: 512
 
-name: "${exp_setting}_ubp_${brain_backbone}_${vision_backbone}"
+name: "${exp_setting}_linear-projector-d512_${brain_backbone}_${vision_backbone}"
 
 models:
   brain:
@@ -12,6 +13,16 @@ models:
         c_num: 17
         z_dim: ${z_dim}
         timesteps: ${timesteps}
+  eeg_projector:
+    target: "main_joint.Projector"
+    params:
+      input_dim: ${z_dim}
+      output_dim: ${feature_dim}
+  image_projector:
+    target: "main_joint.Projector"
+    params:
+      input_dim: ${z_dim}
+      output_dim: ${feature_dim}
 
 data:
   data_dir: data/things-eeg/Preprocessed_data_250Hz_whiten
@@ -20,15 +31,11 @@ data:
   train_batch_size: 1024
   val_batch_size: 200
   test_batch_size: 200
-  uncertainty_aware: True
+  uncertainty_aware: False
   blur_type:
-    target: base.inpating_data.FoveaBlur
+    target: base.inpating_data.UniformBlur
     params:
-          h: 224
-          w: 224
           blur_kernel_size: ${blur_kernel_size}
-          curve_type: exp
-          system_g:  ${system_g}
 
   train_avg: True
   test_avg: True

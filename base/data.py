@@ -117,7 +117,7 @@ class EEGDataset(Dataset):
         self.match_label = np.ones(self.trial_all_subjects, dtype=int)
 
         if  os.path.exists(features_filename):
-            saved_features = torch.load(features_filename)
+            saved_features = torch.load(features_filename, weights_only=False)
             self.img_features = saved_features['img_features']
             self.text_features = saved_features['text_features']
         else:
@@ -147,7 +147,7 @@ class EEGDataset(Dataset):
     def load_data(self,data_path):
         # 没搞懂这个data_path.rsplit('1000HZ',1)[-1]，用1000HZ这个字符串来分割有什么用？
         logging.info(f"----load {data_path.rsplit('1000HZ',1)[-1]}----")
-        loaded_data = torch.load(data_path)
+        loaded_data = torch.load(data_path, weights_only=False)
         loaded_data['eeg']=torch.from_numpy(loaded_data['eeg'])
         
         if self.selected_ch:
@@ -233,7 +233,7 @@ class EEGDataset(Dataset):
 
         img = 'None' #Image.open(os.path.join(self.data_dir,'../Image_set_Resize',img_path)).convert("RGB")
 
-        # match_label有更新吗，在哪里更新的？
+        # match_label有更新吗，在哪里更新的？training step
         match_label = self.match_label[index]
         
         if self.config['data']['uncertainty_aware']:

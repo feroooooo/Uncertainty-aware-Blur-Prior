@@ -33,8 +33,6 @@ class EEGProjectLayer(nn.Module):
                 nn.Dropout(drop_proj),
             )),
             nn.LayerNorm(proj_dim))
-        self.logit_scale = nn.Parameter(torch.ones([]) * np.log(1 / 0.07))
-        self.softplus = nn.Softplus()
         
     def forward(self, x):
         x = x.view(x.shape[0], self.input_dim)
